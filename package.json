@@ -12,6 +12,7 @@
         "mocha": "*",
         "supertest": "*",
         "superagent": "*",
+        "should": "*",
         "chai": "*",
         "chai-spies": "*",
         "node-mocks-http":"*",

@@ -146,14 +146,8 @@ describe('migration module test: case 02 (remove a model)', function() {
                                                 try{
                                                     result.should.eql([]);
                                                 }
-                                                catch(err) {console.log(err)}
-                                                done()
+                                                catch(err) {console.log(err); done(err)}
                                             }
-                                            try{
-                                                result.should.eql([]);
-                                                done()
-                                            }
-                                            catch(err) {console.log(err); done(err)}
                                         }
                                     )
                                 }
