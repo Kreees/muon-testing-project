@@ -124,26 +124,64 @@ describe('migration module test: case 02 (remove a model)', function() {
             muon.ready(function() {
                 m.migration.migrate()
                     .then(function() {
-                        console.log(m.app.models);
-                        var Person = m.app.models.person;
-                        try{
-                            Person.get(1, function(err,result) {
-                                if (err)
-                                {console.log(err)
+                        var mysql_client = mysql.createConnection({
+                            host:'localhost',
+                            user: 'root',
+                            password: ''
+                        });
+                        mysql_client.connect(function(err, results) {
+                            if (err) {
+                                console.log("ERROR: " + err.message);
+                                throw err;
+                            }
+                            console.log("mysql server connected");
+                            mysql_client.query(
+                                'use somedb', function(err) {
+                                    if (err) console.log(err);
+                                    mysql_client.query(
+                                        'show tables', function(err,result) {
+                                            if (err)
+                                            {console.log(err); done(err)}
+                                            else{
+                                                try{
+                                                    result.should.eql([]);
+                                                }
+                                                catch(err) {console.log(err)}
+                                                done()
+                                            }
+                                            try{
+                                                result.should.eql([]);
+                                                done()
+                                            }
+                                            catch(err) {console.log(err); done(err)}
+                                        }
+                                    )
                                 }
-                            });
-                        }
-                        catch(err) {
-                        if (err) {
-                            console.log(err)
-                            err.message.should.eql("Cannot call method 'get' of undefined");
-                            done();
-                        }
-                        else {
-                             var error = new Error;
-                            done(error)
-                                }
-                        }
+                            );
+                        });
+
+
+
+//                        console.log(m.app.models);
+//                        var Person = m.app.models.person;
+//                        try{
+//                            Person.get(1, function(err,result) {
+//                                if (err)
+//                                {console.log(err)
+//                                }
+//                            });
+//                        }
+//                        catch(err) {
+//                        if (err) {
+//                            console.log(err)
+//                            err.message.should.eql("Cannot call method 'get' of undefined");
+//                            done();
+//                        }
+//                        else {
+//                             var error = new Error;
+//                            done(error)
+//                                }
+//                        }
                 })
             });
         });
