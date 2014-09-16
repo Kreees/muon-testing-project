@@ -1,0 +1,24 @@
+{
+    "host": "0.0.0.0",
+    "port": "8000",
+    "dbHost": "127.0.0.1",
+    "lang": "ru",
+    "serverMode": "migration",
+    "plugins": {},
+    "db": {
+        "default": {
+            "type": "mysql",
+            "name": "somedb",
+            "host": "127.0.0.1",
+            "user": "root",
+            "password": ""
+        },
+        "default1": {
+            "type": "mysql",
+            "name": "testdb",
+            "host": "127.0.0.1",
+            "user": "root",
+            "password": ""
+        }
+    }
+}
