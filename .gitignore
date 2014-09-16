@@ -1,4 +1,5 @@
 node_modules
+musor
 .idea
 .DS_Store
 *.db
