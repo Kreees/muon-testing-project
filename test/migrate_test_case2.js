@@ -156,6 +156,7 @@ describe('migration module test: case 02 (remove a model)', function() {
 
 
 
+
 //                        console.log(m.app.models);
 //                        var Person = m.app.models.person;
 //                        try{
@@ -177,6 +178,14 @@ describe('migration module test: case 02 (remove a model)', function() {
 //                                }
 //                        }
                 })
+                    .catch(function(err) {
+                        if (err) {
+                            var Err = new Error;
+                            Err.message = err;
+                            done(Err);
+                        }
+//                        done(err);
+                    })
             });
         });
     });

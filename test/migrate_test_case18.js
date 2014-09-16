@@ -142,7 +142,7 @@ describe('migration module test: case 18 (change scheme)', function() {
         muon.reload(__mcfg__,function() {
             muon.ready(function() {
                 try {
-                    console.log('diff.err ' + m.diff.err)
+                    console.log('diff.err ' + JSON.stringify(m.diff.err))
 //                    m.diff.need.should.be.true;
 //                    m.diff.rmModel.should.eql([]);
 //                    m.diff.rmAttr.should.eql({});
