@@ -1,5 +1,6 @@
 node_modules
 musor
+migrations/magic
 .idea
 .DS_Store
 *.db
