@@ -1,5 +1,0 @@
---require test/__init__/setup
---timeout 2000
---reporter spec
---ui bdd
-./test/__init__/run.js
