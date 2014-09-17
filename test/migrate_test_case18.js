@@ -156,6 +156,17 @@ describe('migration module test: case 18 (change scheme)', function() {
         })
     });
 
+    it('should try to migrate', function(done) {
+        global.__mcfg__ = { serverMode: 'migration' };
+        muon.reload(__mcfg__,function() {
+            muon.ready(function() {
+                m.migration.migrate()
+                    .done(done)
+            });
+//            done();
+        })
+    });
+
 //    it('should detect new model and attribute', function(done) {
 //        console.log('test start');
 //        global.__mcfg__ = { serverMode: 'development' };

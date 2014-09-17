@@ -69,6 +69,8 @@ describe('migration module test: case 15 (incorrect database)', function() {
     }); //удаляем всё и загружаем модель
 
     it('should detect database absence', function(done) {
+
+
 //        global.__mcfg__ = { serverMode: 'development' };
         var d = domain.create();
         d.on('error', function(err) {
@@ -85,97 +87,11 @@ describe('migration module test: case 15 (incorrect database)', function() {
             });
 
             console.log.apply(console,args);
-            console.log('bbbb');
+//            console.log('bbbb');
             global.__mcfg__ = { serverMode: 'migration' };
             muon = require('muon');
-
         });
 
-//        muon = require('muon');
-//        muon.once('migrate-ready', function() {
-//            console.log('muon ready');
-//            console.log(m.diff.need);
-//            try {
-//                m.diff.need.should.be.true;
-//                m.diff.rmModel.should.eql([]);
-//                m.diff.rmAttr.should.eql({});
-//                m.diff.addModel.should.not.eql([]);
-//                m.diff.addAttr.should.eql({});
-//                done();
-//            }
-//            catch(err) {console.log('ERROR '+err); done(err)}
-//        });
     });
-
-//    it('should add model to the database', function(done) {
-//        global.__mcfg__ = { serverMode: 'migration' };
-//        muon.reload(__mcfg__, function() {
-//            muon.ready(function() {
-//                console.log('NOW MIGRATE!!!');
-//                m.migration.migrate();
-//                muon.once("migrate-run-ready", function() {
-//                    console.log('signal received');
-//                    var Person = m.app.models.person;
-//                    Person.get(1, function(err,result) {
-//                        if (err)
-//                        {err.message.should.eql('Not found');
-//                            err.model.should.eql('person');
-//                            done();
-//                        }
-//                        else {
-//                            var error = new Error;
-//                            done(error)
-//                        }
-//                    });
-////                        done();
-//                });
-//            });
-//        });
-//    });
-//
-//    it('should detect nothing', function(done) {
-//        global.__mcfg__ = { serverMode: 'development' };
-//        muon.reload(__mcfg__,function() {
-//            muon.ready(function() {
-//                try {
-//                    m.diff.need.should.be.false;
-//                    m.diff.rmModel.should.eql([]);
-//                    m.diff.rmAttr.should.eql({});
-//                    m.diff.addModel.should.eql([]);
-//                    m.diff.addAttr.should.eql({});
-//                    done();
-//                }
-//                catch(err) {console.log('ERROR '+err); done(err)}
-////                done();
-//            });
-//        })
-//
-//    });
-//
-//    it('should try to create an instance in a database and detect a mismatch', function(done) {
-//        var Person = m.app.models.person;
-//        Person.sync(function(err) {
-//            if (err) {console.log('sync error: ' + err); done(err)}
-//            else {
-//                console.log('table synced');
-//                var per1 = new Person;
-//                per1.name = 'Andy';
-//                per1.surname = 'Warhol';
-//                per1.age = 150;
-//                per1.weight = 'sixty-six';
-//                per1.save(function(err) {
-//                    if (err) {console.log('save error: ' + err);
-//                        console.log(JSON.stringify(err));
-//                        err.message.should.startWith('WARN_DATA_TRUNCATED: Data truncated for column');
-//                        done()}
-//                    else {
-//                        error = new Error;
-//                        error.message = 'no mismatches detected';
-//                        done(error);
-//                    }
-//                });
-//            }
-//        });
-//    });
 
 });

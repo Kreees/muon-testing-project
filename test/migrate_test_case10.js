@@ -161,17 +161,11 @@ describe('migration module test: case 10 (move mode to another database)', funct
         global.__mcfg__ = { serverMode: 'migration' };
         muon.reload(__mcfg__, function() {
             muon.ready(function() {
-                m.migration.migrate([],true)
-                    .catch(function(err) {
-//                        try{
-//                            err.should.startWith('Migration not able');
-//                            done()
-//                        }
-                        done(err);
-                    })
+                m.migration.migrate(true)
                     .done(function() {
                         done();
-                    })
+                    },
+                          function(err) {done(err)})
 
             });
         });

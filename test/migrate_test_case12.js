@@ -9,6 +9,7 @@ var sh = require('should');
 var mysql = require('mysql');
 var domain = require('domain');
 
+
 process.exit = function() {};
 
 
@@ -42,6 +43,8 @@ describe('migration module test: case 12 (invalid attribute type)', function() {
         });
     }); //очищаем базы данных
 
+
+
     before(function() {
         global.__mcfg__ = { serverMode: 'development' };
         if (!g.file.exists(dir))
@@ -60,25 +63,49 @@ describe('migration module test: case 12 (invalid attribute type)', function() {
                 fs.unlink(cfg.path + '/server/app/models/' + models[i], function(err) {if (err) console.log('unlinking error 3 ' +err)});
             }
         });
-        fs.readdir(test_models_source_path, function(err, models) {
-            if (err) {console.log(err)}
-            for (var i in models) {
-                fs.writeFileSync(cfg.path + '/server/app/models/' + models[i], fs.readFileSync(test_models_source_path + models[i]));
-            }
-        });
+//        fs.readdir(test_models_source_path, function(err, models) {
+//            if (err) {console.log(err)}
+//            for (var i in models) {
+//                fs.writeFileSync(cfg.path + '/server/app/models/' + models[i], fs.readFileSync(test_models_source_path + models[i]));
+//            }
+//        });
     }); //удаляем всё и загружаем модель
 
-    it('should detect incorrect argument', function(done) {
-        var d = domain.create();
-        d.on('error', function(err) {
-            console.log('error caught: ' + err);
-            err.message.should.startWith('Unknown property type');
-            done()
-        });
-        d.run(function() {
-            global.__mcfg__ = { serverMode: 'development' };
-            muon = require('muon');
+    before(function(done) {
+        muon = require('muon');
+        muon.ready(function() {
+            fs.readdir(test_models_source_path, function(err, models) {
+                if (err) {console.log(err)}
+                for (var i in models) {
+                    fs.writeFileSync(cfg.path + '/server/app/models/' + models[i], fs.readFileSync(test_models_source_path + models[i]));
+                }
+                done();
+            });
         });
     });
+
+    it('should detect incorrect argument', function(done) {
+//        global.__mcfg__ = { serverMode: 'migration' };
+        muon.reload()
+            .done(function() {
+                console.log('done');
+//                m.migration.migrate(true);
+                done();
+            },
+        function(err) {done(err)});
+    });
+
+//    it('should detect incorrect argument', function(done) {
+//        var d = domain.create();
+//        d.on('error', function(err) {
+//            console.log('error caught: ' + err);
+//            err.message.should.startWith('Unknown property type');
+//            done()
+//        });
+//        d.run(function() {
+//            global.__mcfg__ = { serverMode: 'development' };
+//            muon = require('muon');
+//        });
+//    });
 
 });
