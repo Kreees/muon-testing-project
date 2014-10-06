@@ -83,21 +83,21 @@ describe('migration module test: case 07 (change attribute for one model)', func
             global.__mcfg__ = { serverMode: 'migration' };
             muon.reload(__mcfg__, function() {
                 console.log('reloaded in case 7');
-                m.migration.migrate().then(done);
+                m.migration.migrate().done(function(){done();},function(err){done(err);});
             });
         });
     });
 
     before(function(done) {
             fs.readdir(cfg.path + '/server/app/models/', function(err, models) {
-                if (err) {console.log('readdir error ' + err)}
-                console.log('models are ' + models)
+                if (err) console.log('readdir error ' + err);
+                console.log('models are ' + models);
                 for (var i in models) {
-                    console.log('1 ' + models[i])
+                    console.log('1 ' + models[i]);
                     fs.unlink(cfg.path + '/server/app/models/' + models[i], function(err) {
-                        console.log('2' + models[i])
-                        if (err) console.log('unlinking error 3 ' + err)
-                    })
+                        console.log('2' + models[i]);
+                        if (err) console.log('unlinking error 3 ' + err);
+                    });
                 }
             });
         fs.readdir(test_models_changed_path, function(err, models) {

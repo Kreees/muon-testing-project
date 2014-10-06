@@ -19,11 +19,12 @@ describe('migration module test: case 05 (multiple migrations with "migrate")', 
     var test_models_changed_path = cfg.path + '/test/model_sets/set5/models_ch/';
     var test_models_changed_path1 = cfg.path + '/test/model_sets/set5/models_ch1/';
 
+
     before(function(done) {
         var mysql_client = mysql.createConnection({
-            host:'localhost',
-            user: 'root',
-            password: ''
+            host : 'localhost',
+            user : 'root',
+            password : ''
         });
         mysql_client.connect(function(err, results) {
             if (err) {
@@ -31,19 +32,18 @@ describe('migration module test: case 05 (multiple migrations with "migrate")', 
                 throw err;
             }
             console.log("mysql server connected");
-            mysql_client.query(
-                'drop database somedb', function(err) {
-                    if (err) console.log(err);
-                    mysql_client.query(
-                        'create database somedb', function(err) {
-                            if (err) console.log(err)
-                            done()
-                        }
-                    )
-                }
-            );
+            mysql_client.query('drop database somedb', function(err) {
+                if (err)
+                    console.log(err);
+                mysql_client.query('create database somedb', function(err) {
+                    if (err)
+                        console.log(err)
+                    done()
+                });
+            });
         });
-    }); //очищаем базу данных
+    });
+//очищаем базу данных
 
     before(function(done) {
         if (!g.file.exists(dir))
@@ -71,32 +71,43 @@ describe('migration module test: case 05 (multiple migrations with "migrate")', 
         });
     }); //удаляем все и загружаем исходные модели
 
+
     before(function(done) {
-        global.__mcfg__ = { serverMode: 'development' };
+        global.__mcfg__ = {
+            serverMode : 'development'
+        };
         muon = require('muon');
         muon.ready(function() {
             console.log('muon ready in case 5');
-            global.__mcfg__ = { serverMode: 'migration' };
+            global.__mcfg__ = {
+                serverMode : 'migration'
+            };
             muon.reload(__mcfg__, function() {
                 muon.ready(function() {
-                console.log('reloaded in case 5');
-                    m.migration.migrate().then(function() {
+                    console.log('reloaded in case 5');
+                    var prms = m.migration.migrate();
+                    prms.done(function() {
                         fs.readdir(cfg.path + '/server/app/models/', function(err, models) {
                             console.log('deleting models');
-                            if (err) {console.log('readdir error ' + err)}
+                            if (err)
+                                console.log('readdir error ' + err)
                             for (var i in models) {
                                 fs.unlink(cfg.path + '/server/app/models/' + models[i], function(err) {
-                                    if (err) console.log('unlinking error 3 ' + err);
+                                    if (err)
+                                        console.log('unlinking error 3 ' + err);
                                 });
                             }
                             console.log('MIGRATION ONE END');
                             done();
                         });
-                    })
+                    }, function(err) {
+                        done(err);
+                    });
                 });
             });
         });
-    }); //ищем изменения и проводим первую миграцию
+    }); 
+ //ищем изменения и проводим первую миграцию
 
     before(function(done) {
         fs.readdir(test_models_changed_path, function(err, models) {
@@ -119,7 +130,8 @@ describe('migration module test: case 05 (multiple migrations with "migrate")', 
                 muon.reload(__mcfg__, function() {
                     muon.ready(function() {
                         console.log('reloaded in case 5');
-                        m.migration.migrate().then(function() {
+                        var prms = m.migration.migrate();
+                        prms.done(function() {
                             fs.readdir(cfg.path + '/server/app/models/', function(err, models) {
                                 console.log('deleting models');
                                 if (err) {console.log('readdir error ' + err)}
@@ -131,11 +143,13 @@ describe('migration module test: case 05 (multiple migrations with "migrate")', 
                                 console.log("MIGRATION TWO END");
                                 done();
                             });
+                        }, function(err){
+                            done(err);
                         });
                     });
                 });
             });
-        })
+        });
     }); //ищем изменения и проводим вторую миграцию
 
     before(function(done) {
@@ -158,7 +172,8 @@ describe('migration module test: case 05 (multiple migrations with "migrate")', 
                 muon.reload(__mcfg__, function() {
                     muon.ready(function() {
                         console.log('reloaded in case 5');
-                        m.migration.migrate().then(function() {
+                        var prms = m.migration.migrate();
+                        prms.done(function() {
                             console.log("MIGRATION THREE END");
                             done()
                         });
@@ -168,6 +183,7 @@ describe('migration module test: case 05 (multiple migrations with "migrate")', 
             });
         }); //финальная миграция
 
+    var first_state = {};
     it('should try to migrate to the first state and detect magic absence', function(done) {
         console.log('test start');
         var history_db = new sqlite.Database(cfg.path + '/migrations/history.db');
@@ -178,12 +194,17 @@ describe('migration module test: case 05 (multiple migrations with "migrate")', 
                 first_state = res.state_id;
                 console.log(typeof first_state);
 //                m.migration.info(first_state);
-                m.migration.migrate(first_state).
-                    catch(function(err) {
-                        console.log('ERROR OLOLOLO ' + err);
-                        done();
-                    })
-            })
+                var prms = m.migration.migrate(first_state);
+                prms.done(function(){
+                    done();
+                },function(err){
+                    done(err);
+                });
+                    // catch(function(err) {
+                        // console.log('ERROR OLOLOLO ' + err);
+                        // done();
+                    // })
+            });
         });
     });
 
@@ -210,14 +231,10 @@ describe('migration module test: case 05 (multiple migrations with "migrate")', 
                 muon.reload(__mcfg__,function() {
                     try {
                         m.diff.need.should.be.false;
-//                            m.diff.rmModels.should.eql([]);
-//                            m.diff.rmModelAttr.should.eql({});
-//                            m.diff.addModels.should.eql([]);
-//                            m.diff.addModelAttr.should.eql({});
                         done();
                     }
                     catch(err) {console.log('ERROR '+err); done(err)}
                 });
-            });
-    })
+            }, function(err){done(err)});
+    });
 });

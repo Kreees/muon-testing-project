@@ -1,7 +1,6 @@
 module.exports = {
     attributes: {
-        "name": "text"
-        ,
+        "name": "text",
         "surname": "text",
         "age": "number"
     }
